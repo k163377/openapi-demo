@@ -10,7 +10,7 @@ import springfox.documentation.spring.web.plugins.Docket
 @Configuration
 class SpringFoxConfig {
     @Bean
-    fun api(): Docket = Docket(DocumentationType.SWAGGER_2)
+    fun api(): Docket = Docket(DocumentationType.OAS_30)
         .select()
         .apis(RequestHandlerSelectors.any())
         .paths(PathSelectors.any())
