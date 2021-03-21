@@ -3,12 +3,13 @@ package com.wrongwrong.openapidemo.controller
 import com.wrongwrong.openapidemo.enumable.SampleEnum
 import com.wrongwrong.openapidemo.form.SampleForm
 import com.wrongwrong.openapidemo.view.SampleView
+import io.swagger.annotations.ApiParam
 import org.springframework.web.bind.annotation.*
 
 @RestController
 class DemoController {
     @GetMapping("/sample/get")
-    fun getSample(@RequestParam enum: SampleEnum): SampleView {
+    fun getSample(@RequestParam @ApiParam(allowableValues = "Hoge,Fuga") enum: SampleEnum): SampleView {
         return SampleView(enum)
     }
 
