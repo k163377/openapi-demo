@@ -11,41 +11,55 @@ import springfox.documentation.spring.web.plugins.Docket
 
 @Configuration
 class SpringFoxConfig {
-    @Bean
-    fun api(): Docket = Docket(DocumentationType.OAS_30)
-        // デフォルトで表示されるメッセージの無効化
-        .useDefaultResponseMessages(false)
-        // デフォルトレスポンス
-        .globalResponses(
+    // デフォルトレスポンス設定
+    private fun Docket.myGlobalResponses(): Docket {
+        val `301Response` = ResponseBuilder()
+            .code("301")
+            .description("認証切れに伴うログイン画面へのリダイレクト")
+            .build()
+
+        val `500Response` = ResponseBuilder()
+            .code("500")
+            .description("不正な操作によるシステムエラー、またはサーバーサイドの実装の問題によるエラー")
+            .build()
+
+        val otherResponse = ResponseBuilder()
+            .code("other")
+            .description("通信の切断など、アプリケーションでハンドリングしていないエラー")
+            .build()
+
+        return this.globalResponses(
             HttpMethod.GET,
             listOf(
-                ResponseBuilder()
-                    .code("401")
-                    .description("認証切れに伴うログイン画面へのリダイレクト。")
-                    .build(),
-                ResponseBuilder()
-                    .code("500")
-                    .description("不正な操作によるシステムエラー。またはサーバーサイドの実装の問題によるエラー。")
-                    .build()
-            )
-        )
-        .globalResponses(
-            HttpMethod.POST,
-            listOf(
+                `301Response`,
                 ResponseBuilder()
                     .code("400")
-                    .description("レスポンスにエラーオブジェクトが含まれればバリデーションエラー。それ以外はPOST内容やクエリパラメータ設定の不備によるパースエラー。")
+                    .description("クエリパラメータ設定の不備によるパースエラー")
+                    .build(),
+                `500Response`,
+                otherResponse
+            )
+        ).globalResponses(
+            HttpMethod.POST,
+            listOf(
+                `301Response`,
+                ResponseBuilder()
+                    .code("400")
+                    .description("レスポンスにエラーオブジェクトが含まれればバリデーションエラー、それ以外はPOST内容やクエリパラメータ設定の不備によるパースエラー")
                     .build(),
                 ResponseBuilder()
-                    .code("401")
-                    .description("認証切れに伴うログイン画面へのリダイレクト。")
+                    .code("409")
+                    .description("DB上のデータとPOSTされた内容が食い違ったことによるコンフリクトエラー")
                     .build(),
-                ResponseBuilder()
-                    .code("500")
-                    .description("不正な操作によるシステムエラー。またはサーバーサイドの実装の問題によるエラー。")
-                    .build()
+                `500Response`,
+                otherResponse
             )
         )
+    }
+
+    @Bean
+    fun api(): Docket = Docket(DocumentationType.OAS_30)
+        .myGlobalResponses()
         // 生成対象とするAPIのパス設定、一旦全パス指定
         .select()
         .apis(RequestHandlerSelectors.any())
