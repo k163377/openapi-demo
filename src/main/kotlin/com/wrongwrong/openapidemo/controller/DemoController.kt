@@ -6,7 +6,6 @@ import com.wrongwrong.openapidemo.view.ClassView
 import com.wrongwrong.openapidemo.view.EnumView
 import com.wrongwrong.openapidemo.view.PolymorphicView
 import com.wrongwrong.openapidemo.view.SampleView
-import io.swagger.annotations.ApiParam
 import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 
@@ -17,7 +16,7 @@ class DemoController {
      */
     @Secured(value = [ "ROLE_SAMPLE" ])
     @GetMapping("/sample/get")
-    fun getSample(@RequestParam @ApiParam(allowableValues = "Hoge,Fuga") enum: SampleEnum): SampleView {
+    fun getSample(@RequestParam enum: SampleEnum): SampleView {
         return SampleView(enum)
     }
 
