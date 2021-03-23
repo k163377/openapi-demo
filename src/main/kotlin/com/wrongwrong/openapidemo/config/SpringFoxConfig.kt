@@ -58,7 +58,7 @@ class SpringFoxConfig {
     }
 
     @Bean
-    fun api(): Docket = Docket(DocumentationType.OAS_30)
+    fun api(): Docket = Docket(DocumentationType.SWAGGER_2)
         .myGlobalResponses()
         // 生成対象とするAPIのパス設定、一旦全パス指定
         .select()
