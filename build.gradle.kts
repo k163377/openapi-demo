@@ -26,7 +26,8 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-
+    implementation("org.springdoc:springdoc-openapi-ui:1.5.6")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.5.6")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
